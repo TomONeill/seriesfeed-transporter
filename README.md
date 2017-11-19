@@ -10,9 +10,9 @@ Version <strong>1.0</strong>
 # Features
 - Import your Favourites from Bierdopje.com
 - Import Time Wasted from Bierdopje.com
-- Import lists from IMDb.com (soon)
+- (soon) Import lists from IMDb.com as favourites
 - Export your favourites to Excel or other formats (`TSV`, `CSV`, `XML`, `JSON`)
-- Sync Bierdopje updates with Seriesfeed (soon)
+- (soon) Sync Bierdopje updates with Seriesfeed
 
 # Screenshots
 Soon
