@@ -100,7 +100,7 @@ var SeriesfeedTransporter;
             }
             initialiseCard() {
                 const card = SeriesfeedTransporter.Services.CardService.getCard();
-                card.setTitle("Bierdopje favorieten selecteren");
+                card.setTitle("Details kiezen");
                 card.setBackButtonUrl(SeriesfeedTransporter.Enums.ShortUrl.ImportFavouritesBierdopje);
                 const breadcrumbs = [
                     new SeriesfeedTransporter.Models.Breadcrumb("Type export", SeriesfeedTransporter.Enums.ShortUrl.Export),
@@ -209,7 +209,7 @@ var SeriesfeedTransporter;
             }
             initialiseCard() {
                 const card = SeriesfeedTransporter.Services.CardService.getCard();
-                card.setTitle("Bierdopje favorieten selecteren");
+                card.setTitle("Favorieten selecteren");
                 card.setBackButtonUrl(SeriesfeedTransporter.Enums.ShortUrl.ImportFavouritesBierdopje);
                 const breadcrumbs = [
                     new SeriesfeedTransporter.Models.Breadcrumb("Type export", SeriesfeedTransporter.Enums.ShortUrl.Export),
