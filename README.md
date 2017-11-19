@@ -23,9 +23,9 @@ Soon
 # Other userscripts
 Check out other userscripts for Seriesfeed by me:<BR/>
 <ul>
-    <li><A HREF="https://github.com/TomONeill/Seriesfeed-Move">Seriesfeed Move</A>: drag and drop frontpage items to your liking!</li>
-	  <li><A HREF="https://github.com/TomONeill/seriesfeed-episode-inverter">Seriesfeed Episode Inverter</A>: Choose whether episodes are sorted ascending or descending!</li>
-    <li><A HREF="https://github.com/TomONeill/Seriesfeed-Season-Separator">Seriesfeed Season Separator</A>: Draws a thick line between seasons!</li>
+    <li><A HREF="https://github.com/TomONeill/Seriesfeed-Move">Seriesfeed Move</A>: drag and drop frontpage items to your liking.</li>
+	  <li><A HREF="https://github.com/TomONeill/seriesfeed-episode-inverter">Seriesfeed Episode Inverter</A>: Choose whether episodes are sorted ascending or descending.</li>
+    <li><A HREF="https://github.com/TomONeill/Seriesfeed-Season-Separator">Seriesfeed Season Separator</A>: Draws a thick line between seasons.</li>
 </ul>
 
 # Donate
