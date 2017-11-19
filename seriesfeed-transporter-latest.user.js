@@ -2315,8 +2315,8 @@ var SeriesfeedTransporter;
                 const block = $('<div/>').addClass('col-xs-12 col-md-6');
                 const card = $('<div/>').attr('id', 'userscriptTool').addClass('blog-left cardStyle cardForm');
                 const cardContent = $('<div/>').addClass('blog-content');
-                const cardTitle = $('<h3/>').text("Userscripts");
-                const cardParagraph = $('<p/>').text("Je maakt gebruik van het userscript \"Seriesfeed Transporter\". Dit script slaat gegevens van series en afleveringen op om de druk op de gerelateerde servers te verlagen. Deze data wordt gebruikt om (bij terugkerende acties) bekende data niet opnieuw te hoeven ophalen. Je kunt de lokale gegevens wissen als je problemen ondervindt met importeren/exporteren.");
+                const cardTitle = $('<h3/>').text("Userscript Seriesfeed Transporter");
+                const cardParagraph = $('<p/>').text("Dit script slaat gegevens van series en afleveringen op om de druk op de gerelateerde servers te verlagen. Deze data wordt gebruikt om (bij terugkerende acties) bekende data niet opnieuw te hoeven ophalen. Je kunt de lokale gegevens wissen als je problemen ondervindt met importeren/exporteren.");
                 const dataDeleted = $('<p/>').text("De gegevens zijn gewist.").css({ marginBottom: '0', paddingTop: '5px' }).hide();
                 const buttonAction = () => {
                     dataDeleted.hide();
