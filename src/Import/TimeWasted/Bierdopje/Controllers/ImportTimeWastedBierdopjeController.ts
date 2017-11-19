@@ -124,9 +124,9 @@ module SeriesfeedTransporter.Controllers {
         }
 
         private aquireEpisodeIds(): void {
-            const promises = new Array<Promise<void>>();
-
             this._selectedShows.forEach((show, rowIndex) => {
+                const promises = new Array<Promise<void>>();
+    
                 show.seasons.forEach((season, seasonIndex) => {
                     season.episodes.forEach((episode, episodeIndex) => {
                         const promise = Services.SeriesfeedImportService.getEpisodeId(show.seriesfeedId, episode.tag)
@@ -147,9 +147,11 @@ module SeriesfeedTransporter.Controllers {
                         const episodesAcquiredColumn = currentRow.children().get(Column.EpisodesAcquired);
                         const episodesSeenColumn = currentRow.children().get(Column.EpisodesSeen);
                         const episodeTotalColumn = currentRow.children().get(Column.EpisodeTotal);
-                        let episodeCount = 0;
+                        
                         let episodesAcquired = 0;
                         let episodesSeen = 0;
+                        let episodeCount = 0;
+
                         show.seasons.map((season) => {
                             season.episodes.map((episode) => {
                                 if (episode.acquired) {
@@ -160,8 +162,10 @@ module SeriesfeedTransporter.Controllers {
                                     episodesSeen++;
                                 }
                             });
-                            return episodeCount += season.episodes.length;
+
+                            episodeCount += season.episodes.length;
                         });
+                        
                         $(episodesAcquiredColumn).text('-' + this.Separator + episodesAcquired);
                         $(episodesSeenColumn).text('-' + this.Separator + episodesSeen);
                         $(episodeTotalColumn).text(episodeCount);
@@ -234,9 +238,9 @@ module SeriesfeedTransporter.Controllers {
         private updateActualCountColumn(rowId: number, columnId: Column, done: number): void {
             const row = this._table.getRow(rowId);
             const column = row.children().get(columnId);
-            const columnsParts = $(column).text().split(this.Separator);
-            const currentDoneText = columnsParts[0];
-            const totalDoneText = columnsParts[1];
+            const columnParts = $(column).text().split(this.Separator);
+            const currentDoneText = columnParts[0];
+            const totalDoneText = columnParts[1];
 
             let currentDone = isNaN(+currentDoneText) ? 0 : +currentDoneText;
             currentDone += done;
