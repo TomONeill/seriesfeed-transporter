@@ -1821,6 +1821,7 @@ var SeriesfeedTransporter;
                     const promises = new Array();
                     show.seasons.forEach((season, seasonIndex) => {
                         if (season.episodes.length === 0) {
+                            this.updateCountColumn(rowIndex, Column.Season, 1);
                             return;
                         }
                         const seasonEpisodePromises = new Array();

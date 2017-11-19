@@ -181,6 +181,7 @@ module SeriesfeedTransporter.Controllers {
 
                 show.seasons.forEach((season, seasonIndex) => {
                     if (season.episodes.length === 0) {
+                        this.updateCountColumn(rowIndex, Column.Season, 1);
                         return;
                     }
 
