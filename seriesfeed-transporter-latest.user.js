@@ -49,7 +49,6 @@ var SeriesfeedTransporter;
                 contentWrapper.append(text);
                 cardContent.append(contentWrapper);
                 this.addFavourites(cardContent);
-                this.addTimeWasted(cardContent);
             }
             initialise() {
                 const card = SeriesfeedTransporter.Services.CardService.getCard();
@@ -609,7 +608,6 @@ var SeriesfeedTransporter;
                 this.initialise();
                 const cardContent = $('#' + SeriesfeedTransporter.Config.Id.CardContent);
                 this.addBierdopje(cardContent);
-                this.addImdb(cardContent);
             }
             initialise() {
                 const card = SeriesfeedTransporter.Services.CardService.getCard();

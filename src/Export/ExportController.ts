@@ -18,7 +18,7 @@ module SeriesfeedTransporter.Controllers {
             cardContent.append(contentWrapper);
 
             this.addFavourites(cardContent);
-            this.addTimeWasted(cardContent);
+            //this.addTimeWasted(cardContent);
         }
 
         private initialise(): void {

@@ -7,7 +7,7 @@ module SeriesfeedTransporter.Controllers {
             const cardContent = $('#' + Config.Id.CardContent);
 
             this.addBierdopje(cardContent);
-            this.addImdb(cardContent);
+            //this.addImdb(cardContent);
         }
 
         private initialise(): void {
