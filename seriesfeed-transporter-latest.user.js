@@ -1774,8 +1774,9 @@ var SeriesfeedTransporter;
                     .then(() => setTimeout(this.aquireEpisodeIds(), SeriesfeedTransporter.Config.CooldownInMs));
             }
             aquireEpisodeIds() {
+                const promises = new Array();
                 this._selectedShows.forEach((show, rowIndex) => {
-                    const promises = new Array();
+                    const showPromises = new Array();
                     show.seasons.forEach((season, seasonIndex) => {
                         season.episodes.forEach((episode, episodeIndex) => {
                             const promise = SeriesfeedTransporter.Services.SeriesfeedImportService.getEpisodeId(show.seriesfeedId, episode.tag)
@@ -1786,10 +1787,10 @@ var SeriesfeedTransporter;
                                 const position = season.episodes.map((episode) => episode.tag).indexOf(episode.tag);
                                 season.episodes.splice(position, 1);
                             });
-                            promises.push(promise);
+                            showPromises.push(promise);
                         });
                     });
-                    Promise.all(promises)
+                    const promiseAll = Promise.all(showPromises)
                         .then(() => {
                         const currentRow = this._table.getRow(rowIndex);
                         const episodesAcquiredColumn = currentRow.children().get(Column.EpisodesAcquired);
@@ -1812,9 +1813,11 @@ var SeriesfeedTransporter;
                         $(episodesAcquiredColumn).text('-' + this.Separator + episodesAcquired);
                         $(episodesSeenColumn).text('-' + this.Separator + episodesSeen);
                         $(episodeTotalColumn).text(episodeCount);
-                        setTimeout(this.markEpisodes(), SeriesfeedTransporter.Config.CooldownInMs);
                     });
+                    promises.push(promiseAll);
                 });
+                Promise.all(promises)
+                    .then(() => setTimeout(this.markEpisodes(), SeriesfeedTransporter.Config.CooldownInMs));
             }
             markEpisodes() {
                 this._selectedShows.forEach((show, rowIndex) => {

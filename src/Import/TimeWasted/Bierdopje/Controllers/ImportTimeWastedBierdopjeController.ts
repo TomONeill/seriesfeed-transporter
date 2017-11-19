@@ -124,8 +124,10 @@ module SeriesfeedTransporter.Controllers {
         }
 
         private aquireEpisodeIds(): void {
+            const promises = new Array<Promise<void>>();
+
             this._selectedShows.forEach((show, rowIndex) => {
-                const promises = new Array<Promise<void>>();
+                const showPromises = new Array<Promise<void>>();
 
                 show.seasons.forEach((season, seasonIndex) => {
                     season.episodes.forEach((episode, episodeIndex) => {
@@ -137,11 +139,11 @@ module SeriesfeedTransporter.Controllers {
                                 const position = season.episodes.map((episode) => episode.tag).indexOf(episode.tag);
                                 season.episodes.splice(position, 1);
                             });
-                        promises.push(promise);
+                        showPromises.push(promise);
                     });
                 });
 
-                Promise.all(promises)
+                const promiseAll = Promise.all(showPromises)
                     .then(() => {
                         const currentRow = this._table.getRow(rowIndex);
                         const episodesAcquiredColumn = currentRow.children().get(Column.EpisodesAcquired);
@@ -169,10 +171,13 @@ module SeriesfeedTransporter.Controllers {
                         $(episodesAcquiredColumn).text('-' + this.Separator + episodesAcquired);
                         $(episodesSeenColumn).text('-' + this.Separator + episodesSeen);
                         $(episodeTotalColumn).text(episodeCount);
-
-                        setTimeout(this.markEpisodes(), Config.CooldownInMs);
                     });
+
+                promises.push(promiseAll);
             });
+
+            Promise.all(promises)
+                .then(() => setTimeout(this.markEpisodes(), Config.CooldownInMs));
         }
 
         private markEpisodes(): void {
