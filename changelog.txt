@@ -1,0 +1,4 @@
+Seriesfeed Transporter Changelog
+
+Version 1.0 (19 November 2017)
+First release.
