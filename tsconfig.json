@@ -3,7 +3,7 @@
     "module": "none",
     "noImplicitAny": true,
     "target": "es6",
-    "outFile": "./SeriesfeedImport.user.js",
+    "outFile": "./seriesfeed-transporter-latest.user.js",
     "removeComments": true
   }
 }
