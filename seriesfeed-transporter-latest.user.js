@@ -1,3 +1,23 @@
+// ==UserScript==
+// @name         Seriesfeed Transporter
+// @namespace    https://www.seriesfeed.com
+// @version      1.0
+// @description  Import and export your favourites and time wasted on Seriesfeed.com.
+// @match        https://*.seriesfeed.com/*
+// @grant        unsafeWindow
+// @grant        GM_xmlhttpRequest
+// @connect      www.bierdopje.com
+// @connect      www.imdb.com
+// @domain       www.bierdopje.com
+// @domain       www.imdb.com
+// @require      https://code.jquery.com/jquery-3.2.1.min.js
+// @author       Tom
+// @copyright    2017, Tom
+// ==/UserScript==
+/* jshint -W097 */
+/* global $, GM_xmlhttpRequest, Promise, console */
+'use strict';
+
 var SeriesfeedTransporter;
 (function (SeriesfeedTransporter) {
     class App {
