@@ -1,4 +1,9 @@
 Seriesfeed Transporter Changelog
 
+Version 1.0.1 (22 February 2020)
+Replaced Photobucket with base64 data urls
+Fixed typing errors
+Updated compiler target to ES2018
+
 Version 1.0 (19 November 2017)
 First release.
