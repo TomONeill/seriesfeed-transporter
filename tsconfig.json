@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "none",
     "noImplicitAny": true,
-    "target": "es6",
+    "target": "ES2018",
     "outFile": "./seriesfeed-transporter-latest.user.js",
     "removeComments": true
   }
