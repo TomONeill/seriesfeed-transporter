@@ -3,7 +3,7 @@ Import and export your favourites and time wasted on Seriesfeed.com
 <BR/>
 Enjoy.
 <BR/><BR/>
-Version <strong>1.0</strong>
+Version <strong>1.1</strong>
 
 <A HREF="https://github.com/TomONeill/seriesfeed-transporter/raw/master/seriesfeed-transporter-latest.user.js">INSTALL</A>
 
@@ -45,7 +45,7 @@ If you want to help with the development, you can. To setup the dev in combinati
 	// ==UserScript==
 	// @name         Seriesfeed Transporter
 	// @namespace    https://www.seriesfeed.com
-	// @version      1.0-dev
+	// @version      1.x-dev
 	// @description  Import and export your favourites and time wasted on Seriesfeed.com.
 	// @match        https://*.seriesfeed.com/*
 	// @grant        unsafeWindow
@@ -54,10 +54,10 @@ If you want to help with the development, you can. To setup the dev in combinati
 	// @connect      www.imdb.com
 	// @domain       www.bierdopje.com
 	// @domain       www.imdb.com
-	// @require      https://code.jquery.com/jquery-3.2.1.min.js
-	// @require      file://{YOUR_CLONE}\seriesfeed-transporter-latest.user.js
+	// @require      https://code.jquery.com/jquery-3.3.1.min.js
+	// @require      file://{YOUR_CLONE}/seriesfeed-transporter-latest.user.js
 	// @author       Tom
-	// @copyright    2017, Tom
+	// @copyright    2017 - 2018, Tom
 	// ==/UserScript==
 	/* jshint -W097 */
 	/* global $, GM_xmlhttpRequest, Promise, console */

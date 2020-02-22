@@ -1,4 +1,7 @@
 Seriesfeed Transporter Changelog
 
+Version 1.1 (7 March 2018)
+Modified the queueing mechanism so that it should be more stable, especially with handling large batches.
+
 Version 1.0 (19 November 2017)
 First release.

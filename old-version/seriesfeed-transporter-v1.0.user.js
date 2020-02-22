@@ -1,3 +1,23 @@
+// ==UserScript==
+// @name         Seriesfeed Transporter
+// @namespace    https://www.seriesfeed.com
+// @version      1.0
+// @description  Import and export your favourites and time wasted on Seriesfeed.com.
+// @match        https://*.seriesfeed.com/*
+// @grant        unsafeWindow
+// @grant        GM_xmlhttpRequest
+// @connect      www.bierdopje.com
+// @connect      www.imdb.com
+// @domain       www.bierdopje.com
+// @domain       www.imdb.com
+// @require      https://code.jquery.com/jquery-3.2.1.min.js
+// @author       Tom
+// @copyright    2017, Tom
+// ==/UserScript==
+/* jshint -W097 */
+/* global $, GM_xmlhttpRequest, Promise, console */
+'use strict';
+
 var SeriesfeedTransporter;
 (function (SeriesfeedTransporter) {
     class App {
@@ -2487,14 +2507,6 @@ var SeriesfeedTransporter;
 (function (SeriesfeedTransporter) {
     var Services;
     (function (Services) {
-        class QueueMessage {
-            constructor(request) {
-                this._request = request;
-            }
-            get request() { return this._request; }
-            get result() { return this._result; }
-            set result(result) { this._result = result; }
-        }
         class AjaxService {
             static get(url) {
                 const request = new Promise((resolve, reject) => {
@@ -2512,51 +2524,23 @@ var SeriesfeedTransporter;
                 return this.queue(request);
             }
             static queue(request) {
-                console.log(`queuing a new message (currently in queue: ${this._queuedMessages.length})`);
-                const message = new QueueMessage(request);
-                this._queuedMessages.push(message);
-                if (this._queueHandler == null) {
-                    console.info("started the queue handler.");
-                    this.queueHandler();
+                if (this._currentCalls < SeriesfeedTransporter.Config.MaxAsyncCalls) {
+                    this._currentCalls++;
+                    return request
+                        .then((result) => {
+                        this._currentCalls--;
+                        return result;
+                    })
+                        .catch((error) => {
+                        this._currentCalls--;
+                        return error;
+                    });
                 }
-                return new Promise((resolve, reject) => {
-                    const interval = setInterval(() => {
-                        console.info("checking if request has been resolved...");
-                        if (message.result != null) {
-                            console.info("request has been resolved.");
-                            clearInterval(interval);
-                            resolve(message.result);
-                        }
-                    }, 100);
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve(this.queue(request));
+                    }, 300);
                 });
-            }
-            ;
-            static queueHandler() {
-                this._queueHandler = setInterval(() => {
-                    if (this._queuedMessages.length === 0) {
-                        console.warn("no more messages to handle. stopping the queue handler.");
-                        clearInterval(this._queueHandler);
-                        this._queueHandler = undefined;
-                        return;
-                    }
-                    console.log("current messages in queue:", this._currentCalls);
-                    if (this._currentCalls < SeriesfeedTransporter.Config.MaxAsyncCalls) {
-                        this._currentCalls++;
-                        console.log("handling a new message");
-                        var message = this._queuedMessages.shift();
-                        return message.request
-                            .then((result) => {
-                            console.log("handled message", message.request, "resulting in", result);
-                            message.result = result;
-                            this._currentCalls--;
-                        })
-                            .catch(() => {
-                            console.error("handling message", message, "caused an error.");
-                            this._currentCalls--;
-                        });
-                    }
-                    console.warn("could not handle any more messages at this time; max concurrent handlers are active");
-                }, 100);
             }
             static post(url, data) {
                 const request = new Promise((resolve, reject) => {
@@ -2575,8 +2559,6 @@ var SeriesfeedTransporter;
             }
         }
         AjaxService._currentCalls = 0;
-        AjaxService._queuedMessages = new Array();
-        AjaxService._queueHandler = null;
         Services.AjaxService = AjaxService;
     })(Services = SeriesfeedTransporter.Services || (SeriesfeedTransporter.Services = {}));
 })(SeriesfeedTransporter || (SeriesfeedTransporter = {}));
