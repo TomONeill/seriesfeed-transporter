@@ -3,8 +3,9 @@
 module SeriesfeedTransporter.Services {
     export class NavigationService {
         public static add(navigationType: Enums.NavigationType, position: number, text: string, url: string): void {
-            const mainMenuItem = $("ul.main-menu .submenu .inner .top-level:eq(" + navigationType + ")");
-            mainMenuItem.find(".main-menu-dropdown li:eq(" + position + ")").before("<li><a href='" + url + "'>" + text + "</a></li>");
+            const mainMenuItem = document.querySelector("ul.main-menu .submenu .inner .top-level:nth-child(" + navigationType + ")");
+            const menuItem = ElementService.createElement<HTMLLIElement>("<li><a href='" + url + "'>" + text + "</a></li>");
+            mainMenuItem.querySelector(".main-menu-dropdown li:nth-child(" + position + ")").before(menuItem);
         }
     }
 }
