@@ -103,7 +103,7 @@ module SeriesfeedTransporter.Controllers {
             });
 
             Promise.all(promises)
-                .then(() => setTimeout(this.getShowSeasonEpisodesBySeasonSlug(), Config.CooldownInMs));
+                .then(() => setTimeout(this.getShowSeasonEpisodesBySeasonSlug, Config.CooldownInMs));
         }
 
         private getShowSeasonEpisodesBySeasonSlug(): void {
@@ -120,7 +120,7 @@ module SeriesfeedTransporter.Controllers {
             });
 
             Promise.all(promises)
-                .then(() => setTimeout(this.aquireEpisodeIds(), Config.CooldownInMs));
+                .then(() => setTimeout(this.aquireEpisodeIds, Config.CooldownInMs));
         }
 
         private aquireEpisodeIds(): void {
@@ -177,7 +177,7 @@ module SeriesfeedTransporter.Controllers {
             });
 
             Promise.all(promises)
-                .then(() => setTimeout(this.markEpisodes(), Config.CooldownInMs));
+                .then(() => setTimeout(this.markEpisodes, Config.CooldownInMs));
         }
 
         private markEpisodes(): void {

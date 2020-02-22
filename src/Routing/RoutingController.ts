@@ -32,7 +32,7 @@ module SeriesfeedTransporter.Controllers {
         }
 
         private respondToBrowserNavigationChanges(): void {
-            window.onpopstate = (event) => {
+            window.onpopstate = (event: PopStateEvent) => {
                 if (event.state == null) {
                     return;
                 }
