@@ -65,7 +65,7 @@ module SeriesfeedTransporter.Services {
                 -moz-osx-font-smoothing: grayscale;
             }
         </style>`;
-            $('body').append(css);
+            document.body.append(NodeService.createNode(css));
         }
     }
 }
