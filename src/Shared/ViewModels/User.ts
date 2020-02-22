@@ -57,7 +57,7 @@ module SeriesfeedTransporter.ViewModels {
 
         public setAvatarUrl(avatarUrl?: string): void {
             if (avatarUrl == null || avatarUrl === "") {
-                this.avatar.attr('src', this.unknownUserAvatarUrl);
+                this.avatar.attr('src', this.unknownUserAvatarBase64);
             }
 
             this.avatar.attr('src', avatarUrl);

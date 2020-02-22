@@ -3272,7 +3272,7 @@ var SeriesfeedTransporter;
             }
             setAvatarUrl(avatarUrl) {
                 if (avatarUrl == null || avatarUrl === "") {
-                    this.avatar.attr('src', this.unknownUserAvatarUrl);
+                    this.avatar.attr('src', this.unknownUserAvatarBase64);
                 }
                 this.avatar.attr('src', avatarUrl);
             }
