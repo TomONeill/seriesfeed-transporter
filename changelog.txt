@@ -1,5 +1,8 @@
 Seriesfeed Transporter Changelog
 
+Version 1.1 (TBD)
+Rewrote some jQuery to plain JS
+
 Version 1.0.1 (22 February 2020)
 Replaced Photobucket with base64 data urls
 Fixed typing errors
