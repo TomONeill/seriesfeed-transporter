@@ -40,11 +40,9 @@ module SeriesfeedTransporter.Controllers {
                 this.loadUser();
             };
             const refreshButton = new ViewModels.Button(Enums.ButtonType.Link, "fa-refresh", null, refreshButtonAction);
-            refreshButton.instance.css({
-                position: 'absolute',
-                left: '0',
-                bottom: '0'
-            });
+            refreshButton.instance.style.position = "absolute";
+            refreshButton.instance.style.left = "0";
+            refreshButton.instance.style.bottom = "0";
             this._user.instance.append(refreshButton.instance);
             this.loadUser();
         }
@@ -99,12 +97,10 @@ module SeriesfeedTransporter.Controllers {
                     });
             };
             const searchButton = new ViewModels.Button(Enums.ButtonType.Success, "fa-search", null, searchButtonAction, "15%");
-            searchButton.instance.css({
-                marginTop: '0',
-                borderRadius: '0px 5px 5px 0px',
-                padding: '10px 14px',
-                fontSize: '14px'
-            });
+            searchButton.instance.style.marginTop = "0";
+            searchButton.instance.style.borderRadius = "0px 5px 5px 0px";
+            searchButton.instance.style.padding = "10px 14px";
+            searchButton.instance.style.fontSize = "14px";
             const notFoundMessage = $('<div/>').css({
                 display: 'none',
                 textAlign: 'left',

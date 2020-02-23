@@ -35,11 +35,9 @@ module SeriesfeedTransporter.Controllers {
                 this.loadUser();
             };
             const refreshButton = new ViewModels.Button(Enums.ButtonType.Link, "fa-refresh", null, refreshButtonAction);
-            refreshButton.instance.css({
-                position: 'absolute',
-                left: '0',
-                bottom: '0'
-            });
+            refreshButton.instance.style.position = "absolute";
+            refreshButton.instance.style.left = "0";
+            refreshButton.instance.style.bottom = "0";
             this._user.instance.append(refreshButton.instance);
             this.loadUser();
         }

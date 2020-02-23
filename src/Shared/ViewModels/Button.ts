@@ -2,16 +2,18 @@
 
 module SeriesfeedTransporter.ViewModels {
     export class Button {
-        public instance: JQuery<HTMLElement>;
-        private icon: JQuery<HTMLElement>;
-        private text: JQuery<HTMLElement>;
+        public instance: HTMLDivElement;
+        private icon: HTMLElement;
+        private text: HTMLSpanElement;
         private currentIconClass: string;
         private currentButtonType: string;
 
         constructor(buttonType: Enums.ButtonType, iconClass: string, text?: string, action?: (event: any) => void, width?: string) {
-            this.instance = $('<div/>').addClass('btn');
-            this.icon = $('<i/>').addClass('fa');
-            this.text = $('<span/>');
+            this.instance = document.createElement("div");
+            this.instance.classList.add("btn");
+            this.icon = document.createElement("i");
+            this.icon.classList.add("fa");
+            this.text = document.createElement("span");
 
             this.setButtonType(buttonType);
             this.setClick(action);
@@ -25,45 +27,43 @@ module SeriesfeedTransporter.ViewModels {
 
         public setButtonType(buttonType: Enums.ButtonType): void {
             if (this.currentButtonType != null || this.currentButtonType !== "") {
-                this.instance.removeClass(this.currentButtonType);
+                this.instance.classList.remove(this.currentButtonType);
                 this.currentButtonType = null;
             }
-            this.instance.addClass(buttonType);
+            this.instance.classList.add(buttonType);
             this.currentButtonType = buttonType;
         }
 
         public setClick(action?: (event: any) => void): void {
-            this.instance.unbind('click');
+            this.instance.removeEventListener("click", action);
 
             if (action == null) {
                 return;
             }
 
-            this.instance.click(action);
+            this.instance.addEventListener("click", action);
         }
 
         public setIcon(iconClass: string): void {
             if (this.currentIconClass != null || this.currentIconClass !== "") {
-                this.icon.removeClass(this.currentIconClass);
+                this.icon.classList.remove(this.currentIconClass);
                 this.currentIconClass = null;
             }
-            this.icon.addClass(iconClass);
+            this.icon.classList.add(iconClass);
             this.currentIconClass = iconClass;
         }
 
         public setText(text: string): void {
             if (text == null) {
-                this.text.text('');
+                this.text.innerText = "";
                 return;
             }
             
-            this.text.text(text);
+            this.text.innerText = text;
         }
 
         public setWidth(width: string): void {
-            this.instance.css({
-                width: width == null ? 'auto' : width
-            });
+            this.instance.style.width = (width == null) ? "auto" : width;
         }
     }
 }
