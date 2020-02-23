@@ -10,7 +10,7 @@ module SeriesfeedTransporter.Controllers {
         private initialVisitRouting(): void {
             if (window.location.href.startsWith(Config.BaseUrl + Enums.ShortUrl.Import)
                 || window.location.href.startsWith(Config.BaseUrl + Enums.ShortUrl.Export)) {
-                const url = window.location.href.replace(Config.BaseUrl, '') as Enums.ShortUrl;
+                const url = window.location.href.replace(Config.BaseUrl, "") as Enums.ShortUrl;
                 this.initialiseInitialVisit(url);
                 Services.RouterService.navigate(url);
             }
@@ -20,14 +20,19 @@ module SeriesfeedTransporter.Controllers {
             window.history.replaceState({ "shortUrl": url }, "", url);
             const mainContent = this.fixPageLayoutAndGetMainContent();
             const card = Services.CardService.initialise();
-            mainContent.append(card.instance);
+            mainContent.append(card.instance[0]);
         }
 
-        private fixPageLayoutAndGetMainContent(): JQuery<HTMLElement> {
-            const wrapper = $('.contentWrapper .container').last().empty();
-            wrapper.removeClass('container').addClass('wrapper bg');
-            const container = $('<div></div>').addClass('container').attr('id', Config.Id.MainContent);
-            wrapper.append(container);
+        private fixPageLayoutAndGetMainContent(): HTMLElement {
+            const contentContainers = document.querySelectorAll(".contentWrapper .container");
+            const lastContainer = contentContainers[contentContainers.length - 1];
+            lastContainer.classList.remove("container");
+            lastContainer.classList.add("wrapper", "bg");
+            lastContainer.innerHTML = "";
+            const container = document.createElement("div");
+            container.id = Config.Id.MainContent;
+            container.classList.add("container");
+            lastContainer.append(container);
             return container;
         }
 
