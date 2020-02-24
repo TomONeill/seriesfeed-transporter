@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Seriesfeed Transporter
+// @name         Seriesfeed Transporter (debug)
 // @namespace    https://www.seriesfeed.com
 // @version      1.0.1-debug
 // @description  Import and export your favourites and time wasted on Seriesfeed.com.
