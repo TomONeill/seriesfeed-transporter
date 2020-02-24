@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Seriesfeed Transporter
 // @namespace    https://www.seriesfeed.com
-// @version      1.0.1
+// @version      1.0.1-debug
 // @description  Import and export your favourites and time wasted on Seriesfeed.com.
 // @match        https://*.seriesfeed.com/*
 // @grant        unsafeWindow
@@ -17,6 +17,9 @@
 /* jshint -W097 */
 /* global $, GM_xmlhttpRequest, Promise, console */
 'use strict';
+
+// NOT FOR PRODUCTION USE!
+// Note: This debug build will not provide debugging in the whole script, only specific scenarios will be logged.
 
 var SeriesfeedTransporter;
 (function (SeriesfeedTransporter) {
