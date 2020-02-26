@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Seriesfeed Transporter (debug)
 // @namespace    https://www.seriesfeed.com
-// @version      1.0.1-debug
+// @version      1.0.1-debug:a3bd2c1a
 // @description  Import and export your favourites and time wasted on Seriesfeed.com.
 // @match        https://*.seriesfeed.com/*
 // @grant        unsafeWindow
@@ -268,7 +268,6 @@ var SeriesfeedTransporter;
                     .then((username) => {
                     SeriesfeedTransporter.Services.SeriesfeedExportService.getFavouritesByUsername(username)
                         .then((favourites) => {
-						console.info("Favoriet:", show.name, show.slug, "sfid", show.seriesfeedId, "tvdbid", show.theTvdbId);
                         favourites.forEach((show, index) => {
                             const row = $('<tr/>');
                             const selectColumn = $('<td/>');
@@ -2606,7 +2605,6 @@ var SeriesfeedTransporter;
                 console.info("getting favourites from", url);
                 return Services.AjaxService.get(url)
                     .then((result) => {
-                    console.info("raw response", result.responseText);
                     const data = $(result.responseText);
                     const dataRow = data.find(".content").find("ul").find("li").find("a");
                     const favourites = new Array();
@@ -2652,6 +2650,7 @@ var SeriesfeedTransporter;
                 const url = SeriesfeedTransporter.Config.BierdopjeBaseUrl + showSlug;
                 return Services.AjaxService.get(url)
                     .then((result) => {
+                    console.info("getTvdbIdByShowSlugFromApi (", url, ") response:", result.responseText);
                     const favouriteData = $(result.responseText);
                     const theTvdbId = favouriteData.find(`a[href^='${SeriesfeedTransporter.Config.TheTvdbBaseUrl}']`).html();
                     return theTvdbId;
