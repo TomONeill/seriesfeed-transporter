@@ -1,5 +1,8 @@
 Seriesfeed Transporter Changelog
 
+Version 1.0.2 (28 February 2020)
+Fixed TheTVDB base url that fixed importing from Bierdopje.com
+
 Version 1.0.1 (22 February 2020)
 Replaced Photobucket with base64 data urls
 Fixed typing errors

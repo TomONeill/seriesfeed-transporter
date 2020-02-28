@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Seriesfeed Transporter
 // @namespace    https://www.seriesfeed.com
-// @version      1.0.1
+// @version      1.0.2
 // @description  Import and export your favourites and time wasted on Seriesfeed.com.
 // @match        https://*.seriesfeed.com/*
 // @grant        unsafeWindow
@@ -43,7 +43,7 @@ var SeriesfeedTransporter;
         Config.BaseUrl = "https://www.seriesfeed.com";
         Config.BierdopjeBaseUrl = "http://www.bierdopje.com";
         Config.ImdbBaseUrl = "http://www.imdb.com";
-        Config.TheTvdbBaseUrl = "http://www.thetvdb.com";
+        Config.TheTvdbBaseUrl = "https://www.thetvdb.com";
         Config.Id = {
             MainContent: "mainContent",
             CardContent: "cardContent"
