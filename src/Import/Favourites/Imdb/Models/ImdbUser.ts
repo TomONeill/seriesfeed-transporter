@@ -2,12 +2,12 @@
 
 module SeriesfeedTransporter.Models {
     export class ImdbUser {
-        constructor(id: string, username: string) {
-            this.id = id;
+        constructor(username: string, avatarUrl: string) {
             this.username = username;
+            this.avatarUrl = avatarUrl;
         }
 
-        public id: string;
         public username: string;
+        public avatarUrl: string;
     }
 }

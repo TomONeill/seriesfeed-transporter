@@ -3,13 +3,13 @@
 module SeriesfeedTransporter.Services {
     export class ImdbImportService {
         public static getUser(): Promise<Models.ImdbUser> {
-            return Services.AjaxService.get(Config.ImdbBaseUrl + "/helpdesk/contact")
+            return Services.AjaxService.get(Config.ImdbBaseUrl + "/profile")
                 .then((pageData) => {
                     const data = $(pageData.responseText);
-                    const id = data.find('#navUserMenu p a').attr('href').split('/')[4];
-                    const username = data.find('#navUserMenu p a').html().trim();
+                    const username = data.find('.own-profile h1').text();
+                    const avatarUrl = data.find('#avatar').attr('src');
 
-                    return new Models.ImdbUser(id, username);
+                    return new Models.ImdbUser(username, avatarUrl);
                 })
                 .catch((error) => {
                     throw `Could not get user from ${Config.ImdbBaseUrl}. ${error}`;
@@ -27,8 +27,8 @@ module SeriesfeedTransporter.Services {
                 });
         }
 
-        public static getListsByUserId(userId: string): Promise<Models.ImdbList[]> {
-            return Services.AjaxService.get(Config.ImdbBaseUrl + "/user/" + userId + "/lists")
+        public static getLists(): Promise<Models.ImdbList[]> {
+            return Services.AjaxService.get(Config.ImdbBaseUrl + "/profile/lists")
                 .then((pageData) => {
                     const data = $(pageData.responseText);
                     const dataRows = data.find('table.lists tr.row');
@@ -55,7 +55,7 @@ module SeriesfeedTransporter.Services {
                     return imdbLists;
                 })
                 .catch((error) => {
-                    throw `Could not get lists for user id ${userId} from ${Config.ImdbBaseUrl}. ${error}`;
+                    throw `Could not get lists from ${Config.ImdbBaseUrl}. ${error}`;
                 });
         }
 
@@ -111,49 +111,6 @@ module SeriesfeedTransporter.Services {
                 })
                 .catch((error) => {
                     throw `Could not get series for list id ${listId} from ${Config.ImdbBaseUrl}. ${error}`;
-                });
-        }
-
-        public static getSeriesByListIdAndUserId(listId: string, userId: string): Promise<Models.Show[]> {
-            const url = Config.ImdbBaseUrl + "/list/export?list_id=" + listId + "&author_id=" + userId;
-
-            return Services.AjaxService.get(url)
-                .then((result) => {
-                    const csv = result.responseText;
-                    const entries = csv.split('\n') as Array<string>;
-
-                    const entryKeys = entries[0].split('","');
-                    const imdbSlugIndex = entryKeys.indexOf("const");
-                    const titleIndex = entryKeys.indexOf("Title");
-                    const titleTypeIndex = entryKeys.indexOf("Title type");
-
-                    const shows = new Array<Models.Show>();
-
-                    entries.forEach((entry, index) => {
-                        if (index === 0) {
-                            return;
-                        }
-
-                        const entryValues = entry.split('","');
-                        const titleType = entryValues[titleTypeIndex];
-
-                        if (titleType == null) {
-                            return;
-                        }
-
-                        if (titleType !== "Feature Film" && titleType !== "TV Movie") {
-                            const show = new Models.Show();
-                            show.imdbType = titleType;
-                            show.slug = entryValues[imdbSlugIndex];
-                            show.name = entryValues[titleIndex];
-                            shows.push(show);
-                        }
-                    });
-
-                    return Services.ShowSorterService.sort(shows, "name");
-                })
-                .catch((error) => {
-                    throw `Could not get list id ${listId} for user ${userId} from ${Config.ImdbBaseUrl}. ${error}`;
                 });
         }
     }

@@ -40,7 +40,7 @@ module SeriesfeedTransporter.Controllers {
                 new Models.Breadcrumb("Favorieten importeren", Enums.ShortUrl.Import),
                 new Models.Breadcrumb("IMDb", Enums.ShortUrl.ImportFavourites),
                 new Models.Breadcrumb(this._user.username, Enums.ShortUrl.ImportFavouritesImdb),
-                new Models.Breadcrumb("Importeren", Enums.ShortUrl.ImportFavouritesImdb + this._user.id + "/" + this._user.username)
+                new Models.Breadcrumb("Importeren", Enums.ShortUrl.ImportFavouritesImdb + this._user.username)
             ];
             card.setBreadcrumbs(breadcrumbs);
             card.setWidth('650px');
@@ -73,7 +73,7 @@ module SeriesfeedTransporter.Controllers {
                 .append(this._collectingData.instance)
                 .append(this._nextButton.instance);
 
-            Services.ImdbImportService.getListsByUserId(this._user.id)
+            Services.ImdbImportService.getLists()
                 .then((imdbLists) => {
                     imdbLists.forEach((imdbList, index) => {
                         const checkbox = new ViewModels.Checkbox(`list_${index}`);
@@ -81,7 +81,7 @@ module SeriesfeedTransporter.Controllers {
                             if (isEnabled) {
                                 this._currentCalls++;
                                 this.setCollectingData();
-                                Services.ImdbImportService.getSeriesByListIdAndUserId(imdbList.id, this._user.id)
+                                Services.ImdbImportService.getSeriesByListId(imdbList.id)
                                     .then((shows) => {
                                         imdbList.shows = shows;
                                         this._currentCalls--;

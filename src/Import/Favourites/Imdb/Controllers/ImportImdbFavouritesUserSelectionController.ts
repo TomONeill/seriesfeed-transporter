@@ -51,11 +51,15 @@ module SeriesfeedTransporter.Controllers {
                         this._user.setAvatarUrl();
                         this._user.setUsername("Niet ingelogd");
                     } else {
-                        this._user.onClick = () => Services.RouterService.navigate(Enums.ShortUrl.ImportFavouritesImdb + user.id + "/" + user.username);
+                        this._user.onClick = () => Services.RouterService.navigate(Enums.ShortUrl.ImportFavouritesImdb + user.username);
                         this._user.setUsername(user.username);
-                        Services.ImdbImportService.getAvatarUrlByUserId(user.id)
-                            .then((avatarUrl) => this._user.setAvatarUrl(avatarUrl));
+                        this._user.setAvatarUrl(user.avatarUrl)
                     }
+                })
+                .catch(() => {
+                    this._user.onClick = null;
+                    this._user.setAvatarUrl();
+                    this._user.setUsername("Gegevens ophalen mislukt");
                 });
         }
     }
