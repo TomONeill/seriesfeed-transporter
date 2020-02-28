@@ -16,17 +16,6 @@ module SeriesfeedTransporter.Services {
                 });
         }
 
-        public static getAvatarUrlByUserId(userId: string): Promise<string> {
-            return Services.AjaxService.get(Config.ImdbBaseUrl + "/user/" + userId + "/")
-                .then((pageData) => {
-                    const data = $(pageData.responseText);
-                    return data.find('#avatar').attr('src');
-                })
-                .catch((error) => {
-                    throw `Could not get avatar for user id ${userId} from ${Config.ImdbBaseUrl}. ${error}`;
-                });
-        }
-
         public static getLists(): Promise<Models.ImdbList[]> {
             return Services.AjaxService.get(Config.ImdbBaseUrl + "/profile/lists")
                 .then((pageData) => {
