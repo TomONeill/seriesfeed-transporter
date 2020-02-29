@@ -72,28 +72,25 @@ module SeriesfeedTransporter.Services {
         }
 
         public static getSeriesByListId(listId: string): Promise<any[]> {
-            const url = Config.ImdbBaseUrl + "/list/" + listId + "?view=compact";
+            const url = Config.ImdbBaseUrl + "/list/" + listId + "/export";
 
             return Services.AjaxService.get(url)
-                .then((pageData) => {
-                    const data = $(pageData.responseText);
-                    const seriesItems = data.find(".list_item:not(:first-child)");
+                .then((response) => {
+                    const exportData = Papa.parse(response.responseText, { header: true, skipEmptyLines: true }).data;
+                    const shows: Models.ImdbShow[] = [];
 
-                    const seriesList: any[] = [];
+                    exportData.forEach((exportItem) => {
+                        const show = new Models.ImdbShow();
+                        show.name = exportItem["Title"];
+                        show.url = exportItem["URL"];
+                        show.type = exportItem["Title Type"];
 
-                    seriesItems.each((index, seriesItem) => {
-                        var series = {
-                            name: $(seriesItem).find(".title a").html(),
-                            url: Config.ImdbBaseUrl + $(seriesItem).find(".title a").attr("href"),
-                            type: $(seriesItem).find(".title_type").html()
-                        };
-
-                        if (series.type !== "Feature") {
-                            seriesList.push(series);
+                        if (show.type !== Enums.ImdbTitleType.Feature) {
+                            shows.push(show);
                         }
                     });
 
-                    return seriesList.sort((a, b) => b.name.localeCompare(a.name));
+                    return shows.sort((a, b) => b.name.localeCompare(a.name)).reverse();
                 })
                 .catch((error) => {
                     throw `Could not get series for list id ${listId} from ${Config.ImdbBaseUrl}. ${error}`;

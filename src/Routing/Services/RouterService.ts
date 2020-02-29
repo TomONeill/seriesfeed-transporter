@@ -136,9 +136,8 @@ module SeriesfeedTransporter.Services {
 
             if (url.startsWith(Enums.ShortUrl.ImportFavouritesImdb)) {
                 const parts = url.split('/');
-                const userId = parts[parts.length - 2];
                 const username = parts[parts.length - 1];
-                const user = new Models.ImdbUser(userId, decodeURIComponent(username));
+                const user = new Models.ImdbUser(username, null);
 
                 this.importFavouritesImdbByUser(user);
                 return;

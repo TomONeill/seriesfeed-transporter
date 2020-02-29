@@ -4,7 +4,7 @@ module SeriesfeedTransporter.Controllers {
     export class ImdbFavouriteSelectionController {
         private _user: Models.ImdbUser;
         private _selectedLists: Array<Models.ImdbList>;
-        private _selectedShows: Array<Models.Show>;
+        private _selectedShows: Array<Models.ImdbShow>;
         private _checkboxes: Array<ViewModels.Checkbox>;
         private _nextButton: ViewModels.ReadMoreButton;
 
@@ -71,12 +71,12 @@ module SeriesfeedTransporter.Controllers {
                     });
 
                     this._checkboxes.push(checkbox);
-                    const showLink = $('<a/>').attr('href', Config.ImdbBaseUrl + "/title/" + show.slug).attr('target', '_blank').text(show.name);
+                    const showLink = $('<a/>').attr('href', show.url).attr('target', '_blank').text(show.name);
 
                     const row = $('<tr/>');
                     const selectColumn = $('<td/>').append(checkbox.instance);
                     const showColumn = $('<td/>').append(showLink);
-                    const showTypeColumn = $('<td/>').text(show.imdbType);
+                    const showTypeColumn = $('<td/>').text(show.type);
 
                     row.append(selectColumn);
                     row.append(showColumn);
