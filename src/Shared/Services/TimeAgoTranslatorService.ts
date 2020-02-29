@@ -2,62 +2,31 @@
 
 module SeriesfeedTransporter.Services {
     export class TimeAgoTranslatorService {
-        public static getDutchTranslationOfTime(original: string): string {
-            switch (original) {
-                case "years":
-                case "year":
-                    return "jaar"
-                case "months":
-                    return "maanden"
-                case "month":
-                    return "maand"
-                case "weeks":
-                    return "weken"
-                case "week":
-                    return "week"
-                case "days":
-                    return "dagen"
-                case "day":
-                    return "dag"
-                case "hours":
-                case "hour":
-                    return "uur"
-                case "minutes":
-                    return "minuten"
-                case "minute":
-                    return "minuut"
-                case "seconds":
-                    return "seconden"
-                case "second":
-                    return "seconde"
-            }
-        }
-
-        public static getFullDutchTranslationOfMonthAbbreviation(month: string): string {
+        public static getDutchTranslationOfMonth(month: string): string {
             switch (month) {
-                case "Jan":
+                case "January":
                     return "januari";
-                case "Feb":
+                case "February":
                     return "februari";
-                case "Mar":
+                case "March":
                     return "maart";
-                case "Apr":
+                case "April":
                     return "april";
                 case "May":
                     return "mei";
-                case "Jun":
+                case "June":
                     return "juni";
-                case "Jul":
+                case "July":
                     return "juli";
-                case "Aug":
+                case "August":
                     return "augustus";
-                case "Sep":
+                case "September":
                     return "september";
-                case "Oct":
+                case "October":
                     return "oktober";
-                case "Nov":
+                case "November":
                     return "november";
-                case "Dec":
+                case "December":
                     return "december";
             }
         }
