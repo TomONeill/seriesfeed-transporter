@@ -3,7 +3,7 @@ Import and export your favourites and time wasted on Seriesfeed.com
 <BR/>
 Enjoy.
 <BR/><BR/>
-Version <strong>1.0.2</strong>
+Version <strong>1.0.3</strong>
 
 <A HREF="https://github.com/TomONeill/seriesfeed-transporter/raw/master/seriesfeed-transporter-latest.user.js">INSTALL</A>
 
