@@ -116,7 +116,6 @@ module SeriesfeedTransporter.Controllers {
                                             });
                                     });
                                 this._selectedShows.push(show);
-                                console.log("pushed show", show, "to", this._selectedShows);
                             } else {
                                 const position = this._selectedShows.map((show) => show.name).indexOf(show.name);
                                 this._selectedShows.splice(position, 1);

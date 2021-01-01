@@ -1675,7 +1675,6 @@ var SeriesfeedTransporter;
                 this.Separator = '/';
                 this._username = username;
                 this._selectedShows = selectedShows;
-                console.log("set _selectedShows", selectedShows);
                 window.scrollTo(0, 0);
                 this.initialiseCard();
                 this.initialiseTable();
@@ -1979,7 +1978,6 @@ var SeriesfeedTransporter;
                                     });
                                 });
                                 this._selectedShows.push(show);
-                                console.log("pushed show", show, "to", this._selectedShows);
                             }
                             else {
                                 const position = this._selectedShows.map((show) => show.name).indexOf(show.name);

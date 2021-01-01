@@ -20,7 +20,6 @@ module SeriesfeedTransporter.Controllers {
         constructor(username: string, selectedShows: Array<Models.Show>) {
             this._username = username;
             this._selectedShows = selectedShows;
-            console.log("set _selectedShows", selectedShows);
 
             window.scrollTo(0, 0);
             this.initialiseCard();
