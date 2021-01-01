@@ -20,6 +20,7 @@ module SeriesfeedTransporter.Controllers {
         constructor(username: string, selectedShows: Array<Models.Show>) {
             this._username = username;
             this._selectedShows = selectedShows;
+            console.log("set _selectedShows", selectedShows);
 
             window.scrollTo(0, 0);
             this.initialiseCard();
@@ -103,7 +104,7 @@ module SeriesfeedTransporter.Controllers {
             });
 
             Promise.all(promises)
-                .then(() => setTimeout(this.getShowSeasonEpisodesBySeasonSlug, Config.CooldownInMs));
+                .then(() => setTimeout(() => this.getShowSeasonEpisodesBySeasonSlug(), Config.CooldownInMs));
         }
 
         private getShowSeasonEpisodesBySeasonSlug(): void {
@@ -120,7 +121,7 @@ module SeriesfeedTransporter.Controllers {
             });
 
             Promise.all(promises)
-                .then(() => setTimeout(this.aquireEpisodeIds, Config.CooldownInMs));
+                .then(() => setTimeout(() => this.aquireEpisodeIds(), Config.CooldownInMs));
         }
 
         private aquireEpisodeIds(): void {
@@ -177,7 +178,7 @@ module SeriesfeedTransporter.Controllers {
             });
 
             Promise.all(promises)
-                .then(() => setTimeout(this.markEpisodes, Config.CooldownInMs));
+                .then(() => setTimeout(() => this.markEpisodes(), Config.CooldownInMs));
         }
 
         private markEpisodes(): void {

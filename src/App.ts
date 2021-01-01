@@ -3,7 +3,7 @@
 module SeriesfeedTransporter {
     class App {
         public static main(): void {
-            window.onload = () => this.initialise();
+            $(() => this.initialise());
         }
 
         private static initialise(): void {

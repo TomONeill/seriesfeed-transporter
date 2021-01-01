@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Seriesfeed Transporter
 // @namespace    https://www.seriesfeed.com
-// @version      1.0.3
+// @version      1.0.1
 // @description  Import and export your favourites and time wasted on Seriesfeed.com.
 // @match        https://*.seriesfeed.com/*
 // @grant        unsafeWindow
@@ -12,7 +12,7 @@
 // @domain       www.imdb.com
 // @require      https://code.jquery.com/jquery-3.2.1.min.js
 // @author       Tom
-// @copyright    2017 - 2021, Tom
+// @copyright    2017 - 2020, Tom
 // ==/UserScript==
 /* jshint -W097 */
 /* global $, GM_xmlhttpRequest, Promise, console */
@@ -42,8 +42,8 @@ var SeriesfeedTransporter;
     (function (Config) {
         Config.BaseUrl = "https://www.seriesfeed.com";
         Config.BierdopjeBaseUrl = "http://www.bierdopje.com";
-        Config.ImdbBaseUrl = "https://www.imdb.com";
-        Config.TheTvdbBaseUrl = "https://www.thetvdb.com";
+        Config.ImdbBaseUrl = "http://www.imdb.com";
+        Config.TheTvdbBaseUrl = "http://www.thetvdb.com";
         Config.Id = {
             MainContent: "mainContent",
             CardContent: "cardContent"
@@ -77,7 +77,7 @@ var SeriesfeedTransporter;
             }
             addFavourites(cardContent) {
                 const favourites = new SeriesfeedTransporter.ViewModels.Button(SeriesfeedTransporter.Enums.ButtonType.Success, "fa-star-o", "Favorieten", () => SeriesfeedTransporter.Services.RouterService.navigate(SeriesfeedTransporter.Enums.ShortUrl.ExportFavourites), "100%");
-                favourites.instance.style.marginTop = "0px";
+                favourites.instance.css({ marginTop: '0px' });
                 cardContent.append(favourites.instance);
             }
             addTimeWasted(cardContent) {
@@ -608,7 +608,7 @@ var SeriesfeedTransporter;
             }
             addFavourites(cardContent) {
                 const favourites = new SeriesfeedTransporter.ViewModels.Button(SeriesfeedTransporter.Enums.ButtonType.Success, "fa-star-o", "Favorieten", () => SeriesfeedTransporter.Services.RouterService.navigate(SeriesfeedTransporter.Enums.ShortUrl.ImportFavourites), "100%");
-                favourites.instance.style.marginTop = "0px";
+                favourites.instance.css({ marginTop: '0px' });
                 cardContent.append(favourites.instance);
             }
             addTimeWasted(cardContent) {
@@ -628,7 +628,6 @@ var SeriesfeedTransporter;
                 this.initialise();
                 const cardContent = $('#' + SeriesfeedTransporter.Config.Id.CardContent);
                 this.addBierdopje(cardContent);
-                this.addImdb(cardContent);
             }
             initialise() {
                 const card = SeriesfeedTransporter.Services.CardService.getCard();
@@ -952,9 +951,11 @@ var SeriesfeedTransporter;
                     this.loadUser();
                 };
                 const refreshButton = new SeriesfeedTransporter.ViewModels.Button(SeriesfeedTransporter.Enums.ButtonType.Link, "fa-refresh", null, refreshButtonAction);
-                refreshButton.instance.style.position = "absolute";
-                refreshButton.instance.style.left = "0";
-                refreshButton.instance.style.bottom = "0";
+                refreshButton.instance.css({
+                    position: 'absolute',
+                    left: '0',
+                    bottom: '0'
+                });
                 this._user.instance.append(refreshButton.instance);
                 this.loadUser();
             }
@@ -1005,10 +1006,12 @@ var SeriesfeedTransporter;
                     });
                 };
                 const searchButton = new SeriesfeedTransporter.ViewModels.Button(SeriesfeedTransporter.Enums.ButtonType.Success, "fa-search", null, searchButtonAction, "15%");
-                searchButton.instance.style.marginTop = "0";
-                searchButton.instance.style.borderRadius = "0px 5px 5px 0px";
-                searchButton.instance.style.padding = "10px 14px";
-                searchButton.instance.style.fontSize = "14px";
+                searchButton.instance.css({
+                    marginTop: '0',
+                    borderRadius: '0px 5px 5px 0px',
+                    padding: '10px 14px',
+                    fontSize: '14px'
+                });
                 const notFoundMessage = $('<div/>').css({
                     display: 'none',
                     textAlign: 'left',
@@ -1105,11 +1108,11 @@ var SeriesfeedTransporter;
                             this.setNextButton();
                         });
                         this._checkboxes.push(checkbox);
-                        const showLink = $('<a/>').attr('href', show.url).attr('target', '_blank').text(show.name);
+                        const showLink = $('<a/>').attr('href', SeriesfeedTransporter.Config.ImdbBaseUrl + "/title/" + show.slug).attr('target', '_blank').text(show.name);
                         const row = $('<tr/>');
                         const selectColumn = $('<td/>').append(checkbox.instance);
                         const showColumn = $('<td/>').append(showLink);
-                        const showTypeColumn = $('<td/>').text(show.type);
+                        const showTypeColumn = $('<td/>').text(show.imdbType);
                         row.append(selectColumn);
                         row.append(showColumn);
                         row.append(showTypeColumn);
@@ -1176,7 +1179,7 @@ var SeriesfeedTransporter;
                     new SeriesfeedTransporter.Models.Breadcrumb("Favorieten importeren", SeriesfeedTransporter.Enums.ShortUrl.Import),
                     new SeriesfeedTransporter.Models.Breadcrumb("IMDb", SeriesfeedTransporter.Enums.ShortUrl.ImportFavourites),
                     new SeriesfeedTransporter.Models.Breadcrumb(this._user.username, SeriesfeedTransporter.Enums.ShortUrl.ImportFavouritesImdb),
-                    new SeriesfeedTransporter.Models.Breadcrumb("Importeren", SeriesfeedTransporter.Enums.ShortUrl.ImportFavouritesImdb + this._user.username)
+                    new SeriesfeedTransporter.Models.Breadcrumb("Importeren", SeriesfeedTransporter.Enums.ShortUrl.ImportFavouritesImdb + this._user.id + "/" + this._user.username)
                 ];
                 card.setBreadcrumbs(breadcrumbs);
                 card.setWidth('650px');
@@ -1205,7 +1208,7 @@ var SeriesfeedTransporter;
                     .append(loadingData)
                     .append(this._collectingData.instance)
                     .append(this._nextButton.instance);
-                SeriesfeedTransporter.Services.ImdbImportService.getLists()
+                SeriesfeedTransporter.Services.ImdbImportService.getListsByUserId(this._user.id)
                     .then((imdbLists) => {
                     imdbLists.forEach((imdbList, index) => {
                         const checkbox = new SeriesfeedTransporter.ViewModels.Checkbox(`list_${index}`);
@@ -1213,7 +1216,7 @@ var SeriesfeedTransporter;
                             if (isEnabled) {
                                 this._currentCalls++;
                                 this.setCollectingData();
-                                SeriesfeedTransporter.Services.ImdbImportService.getSeriesByListId(imdbList.id)
+                                SeriesfeedTransporter.Services.ImdbImportService.getSeriesByListIdAndUserId(imdbList.id, this._user.id)
                                     .then((shows) => {
                                     imdbList.shows = shows;
                                     this._currentCalls--;
@@ -1328,9 +1331,11 @@ var SeriesfeedTransporter;
                     this.loadUser();
                 };
                 const refreshButton = new SeriesfeedTransporter.ViewModels.Button(SeriesfeedTransporter.Enums.ButtonType.Link, "fa-refresh", null, refreshButtonAction);
-                refreshButton.instance.style.position = "absolute";
-                refreshButton.instance.style.left = "0";
-                refreshButton.instance.style.bottom = "0";
+                refreshButton.instance.css({
+                    position: 'absolute',
+                    left: '0',
+                    bottom: '0'
+                });
                 this._user.instance.append(refreshButton.instance);
                 this.loadUser();
             }
@@ -1343,29 +1348,16 @@ var SeriesfeedTransporter;
                         this._user.setUsername("Niet ingelogd");
                     }
                     else {
-                        this._user.onClick = () => SeriesfeedTransporter.Services.RouterService.navigate(SeriesfeedTransporter.Enums.ShortUrl.ImportFavouritesImdb + user.username);
+                        this._user.onClick = () => SeriesfeedTransporter.Services.RouterService.navigate(SeriesfeedTransporter.Enums.ShortUrl.ImportFavouritesImdb + user.id + "/" + user.username);
                         this._user.setUsername(user.username);
-                        this._user.setAvatarUrl(user.avatarUrl);
+                        SeriesfeedTransporter.Services.ImdbImportService.getAvatarUrlByUserId(user.id)
+                            .then((avatarUrl) => this._user.setAvatarUrl(avatarUrl));
                     }
-                })
-                    .catch(() => {
-                    this._user.onClick = null;
-                    this._user.setAvatarUrl();
-                    this._user.setUsername("Gegevens ophalen mislukt");
                 });
             }
         }
         Controllers.ImportImdbFavouritesUserSelectionController = ImportImdbFavouritesUserSelectionController;
     })(Controllers = SeriesfeedTransporter.Controllers || (SeriesfeedTransporter.Controllers = {}));
-})(SeriesfeedTransporter || (SeriesfeedTransporter = {}));
-var SeriesfeedTransporter;
-(function (SeriesfeedTransporter) {
-    var Enums;
-    (function (Enums) {
-        Enums.ImdbTitleType = {
-            Feature: "Feature"
-        };
-    })(Enums = SeriesfeedTransporter.Enums || (SeriesfeedTransporter.Enums = {}));
 })(SeriesfeedTransporter || (SeriesfeedTransporter = {}));
 var SeriesfeedTransporter;
 (function (SeriesfeedTransporter) {
@@ -1380,19 +1372,10 @@ var SeriesfeedTransporter;
 (function (SeriesfeedTransporter) {
     var Models;
     (function (Models) {
-        class ImdbShow {
-        }
-        Models.ImdbShow = ImdbShow;
-    })(Models = SeriesfeedTransporter.Models || (SeriesfeedTransporter.Models = {}));
-})(SeriesfeedTransporter || (SeriesfeedTransporter = {}));
-var SeriesfeedTransporter;
-(function (SeriesfeedTransporter) {
-    var Models;
-    (function (Models) {
         class ImdbUser {
-            constructor(username, avatarUrl) {
+            constructor(id, username) {
+                this.id = id;
                 this.username = username;
-                this.avatarUrl = avatarUrl;
             }
         }
         Models.ImdbUser = ImdbUser;
@@ -1404,34 +1387,42 @@ var SeriesfeedTransporter;
     (function (Services) {
         class ImdbImportService {
             static getUser() {
-                return Services.AjaxService.get(SeriesfeedTransporter.Config.ImdbBaseUrl + "/profile")
+                return Services.AjaxService.get(SeriesfeedTransporter.Config.ImdbBaseUrl + "/helpdesk/contact")
                     .then((pageData) => {
                     const data = $(pageData.responseText);
-                    const username = data.find('.own-profile h1').text();
-                    const avatarUrl = data.find('#avatar').attr('src');
-                    return new SeriesfeedTransporter.Models.ImdbUser(username, avatarUrl);
+                    const id = data.find('#navUserMenu p a').attr('href').split('/')[4];
+                    const username = data.find('#navUserMenu p a').html().trim();
+                    return new SeriesfeedTransporter.Models.ImdbUser(id, username);
                 })
                     .catch((error) => {
                     throw `Could not get user from ${SeriesfeedTransporter.Config.ImdbBaseUrl}. ${error}`;
                 });
             }
-            static getLists() {
-                return Services.AjaxService.get(SeriesfeedTransporter.Config.ImdbBaseUrl + "/profile/lists")
+            static getAvatarUrlByUserId(userId) {
+                return Services.AjaxService.get(SeriesfeedTransporter.Config.ImdbBaseUrl + "/user/" + userId + "/")
                     .then((pageData) => {
                     const data = $(pageData.responseText);
-                    const dataRows = data.find('ul.lists-for-user > li');
+                    return data.find('#avatar').attr('src');
+                })
+                    .catch((error) => {
+                    throw `Could not get avatar for user id ${userId} from ${SeriesfeedTransporter.Config.ImdbBaseUrl}. ${error}`;
+                });
+            }
+            static getListsByUserId(userId) {
+                return Services.AjaxService.get(SeriesfeedTransporter.Config.ImdbBaseUrl + "/user/" + userId + "/lists")
+                    .then((pageData) => {
+                    const data = $(pageData.responseText);
+                    const dataRows = data.find('table.lists tr.row');
                     const imdbLists = new Array();
                     dataRows.each((index, dataRow) => {
                         const imdbList = new SeriesfeedTransporter.Models.ImdbList();
-                        const imdbListUrl = $(dataRow).find('a.list-name').attr('href');
+                        const imdbListUrl = $(dataRow).find('.name a').attr('href');
                         const imdbListUrlParts = imdbListUrl.split('/');
                         imdbList.id = imdbListUrlParts[imdbListUrlParts.length - 2];
-                        imdbList.name = $(dataRow).find('a.list-name').text();
-                        const seriesCountRaw = $(dataRow).find('.list-meta').text();
-                        imdbList.seriesCount = /(.*) titles/.exec(seriesCountRaw)[1];
-                        const dateMetaData = $(dataRow).find('div:nth-child(5)').text();
-                        imdbList.createdOn = /Created (.*)/.exec(dateMetaData)[1];
-                        imdbList.modifiedOn = /Modified (.*) \|/.exec(dateMetaData)[1];
+                        imdbList.name = $(dataRow).find('.name a').text();
+                        imdbList.seriesCount = $(dataRow).find('.name span').text();
+                        imdbList.createdOn = $(dataRow).find('.created').text();
+                        imdbList.modifiedOn = $(dataRow).find('.modified').text();
                         this.fixListTranslations(imdbList);
                         imdbLists.push(imdbList);
                     });
@@ -1439,16 +1430,20 @@ var SeriesfeedTransporter;
                     return imdbLists;
                 })
                     .catch((error) => {
-                    throw `Could not get lists from ${SeriesfeedTransporter.Config.ImdbBaseUrl}. ${error}`;
+                    throw `Could not get lists for user id ${userId} from ${SeriesfeedTransporter.Config.ImdbBaseUrl}. ${error}`;
                 });
             }
             static fixListTranslations(imdbList) {
+                imdbList.seriesCount = imdbList.seriesCount
+                    .replace(" Titles", "")
+                    .replace('(', "")
+                    .replace(')', "");
                 const createdOnParts = imdbList.createdOn.split(' ');
-                const createdOnMonth = Services.TimeAgoTranslatorService.getDutchTranslationOfMonth(createdOnParts[1]);
+                const createdOnMonth = Services.TimeAgoTranslatorService.getFullDutchTranslationOfMonthAbbreviation(createdOnParts[1]);
                 imdbList.createdOn = imdbList.createdOn.replace(createdOnParts[1], createdOnMonth);
                 const modifiedOnParts = imdbList.modifiedOn.split(' ');
-                const modifiedOnMonth = Services.TimeAgoTranslatorService.getDutchTranslationOfMonth(modifiedOnParts[1]);
-                imdbList.modifiedOn = imdbList.modifiedOn.replace(modifiedOnParts[1], modifiedOnMonth);
+                const modifiedOnTime = Services.TimeAgoTranslatorService.getDutchTranslationOfTime(modifiedOnParts[1]);
+                imdbList.modifiedOn = imdbList.modifiedOn.replace(modifiedOnParts[1], modifiedOnTime).replace("ago", "geleden");
             }
             static getWatchlistItem() {
                 const watchlist = new SeriesfeedTransporter.Models.ImdbList();
@@ -1460,24 +1455,60 @@ var SeriesfeedTransporter;
                 return watchlist;
             }
             static getSeriesByListId(listId) {
-                const url = SeriesfeedTransporter.Config.ImdbBaseUrl + "/list/" + listId + "/export";
+                const url = SeriesfeedTransporter.Config.ImdbBaseUrl + "/list/" + listId + "?view=compact";
                 return Services.AjaxService.get(url)
-                    .then((response) => {
-                    const exportData = Papa.parse(response.responseText, { header: true, skipEmptyLines: true }).data;
-                    const shows = [];
-                    exportData.forEach((exportItem) => {
-                        const show = new SeriesfeedTransporter.Models.ImdbShow();
-                        show.name = exportItem["Title"];
-                        show.url = exportItem["URL"];
-                        show.type = exportItem["Title Type"];
-                        if (show.type !== SeriesfeedTransporter.Enums.ImdbTitleType.Feature) {
-                            shows.push(show);
+                    .then((pageData) => {
+                    const data = $(pageData.responseText);
+                    const seriesItems = data.find(".list_item:not(:first-child)");
+                    const seriesList = [];
+                    seriesItems.each((index, seriesItem) => {
+                        var series = {
+                            name: $(seriesItem).find(".title a").html(),
+                            url: SeriesfeedTransporter.Config.ImdbBaseUrl + $(seriesItem).find(".title a").attr("href"),
+                            type: $(seriesItem).find(".title_type").html()
+                        };
+                        if (series.type !== "Feature") {
+                            seriesList.push(series);
                         }
                     });
-                    return shows.sort((a, b) => b.name.localeCompare(a.name)).reverse();
+                    return seriesList.sort((a, b) => b.name.localeCompare(a.name));
                 })
                     .catch((error) => {
                     throw `Could not get series for list id ${listId} from ${SeriesfeedTransporter.Config.ImdbBaseUrl}. ${error}`;
+                });
+            }
+            static getSeriesByListIdAndUserId(listId, userId) {
+                const url = SeriesfeedTransporter.Config.ImdbBaseUrl + "/list/export?list_id=" + listId + "&author_id=" + userId;
+                return Services.AjaxService.get(url)
+                    .then((result) => {
+                    const csv = result.responseText;
+                    const entries = csv.split('\n');
+                    const entryKeys = entries[0].split('","');
+                    const imdbSlugIndex = entryKeys.indexOf("const");
+                    const titleIndex = entryKeys.indexOf("Title");
+                    const titleTypeIndex = entryKeys.indexOf("Title type");
+                    const shows = new Array();
+                    entries.forEach((entry, index) => {
+                        if (index === 0) {
+                            return;
+                        }
+                        const entryValues = entry.split('","');
+                        const titleType = entryValues[titleTypeIndex];
+                        if (titleType == null) {
+                            return;
+                        }
+                        if (titleType !== "Feature Film" && titleType !== "TV Movie") {
+                            const show = new SeriesfeedTransporter.Models.Show();
+                            show.imdbType = titleType;
+                            show.slug = entryValues[imdbSlugIndex];
+                            show.name = entryValues[titleIndex];
+                            shows.push(show);
+                        }
+                    });
+                    return Services.ShowSorterService.sort(shows, "name");
+                })
+                    .catch((error) => {
+                    throw `Could not get list id ${listId} for user ${userId} from ${SeriesfeedTransporter.Config.ImdbBaseUrl}. ${error}`;
                 });
             }
         }
@@ -1675,7 +1706,6 @@ var SeriesfeedTransporter;
                 this.Separator = '/';
                 this._username = username;
                 this._selectedShows = selectedShows;
-                console.log("set _selectedShows", selectedShows);
                 window.scrollTo(0, 0);
                 this.initialiseCard();
                 this.initialiseTable();
@@ -1745,7 +1775,7 @@ var SeriesfeedTransporter;
                     promises.push(promise);
                 });
                 Promise.all(promises)
-                    .then(() => setTimeout(() => this.getShowSeasonEpisodesBySeasonSlug(), SeriesfeedTransporter.Config.CooldownInMs));
+                    .then(() => setTimeout(this.getShowSeasonEpisodesBySeasonSlug, SeriesfeedTransporter.Config.CooldownInMs));
             }
             getShowSeasonEpisodesBySeasonSlug() {
                 const promises = new Array();
@@ -1759,7 +1789,7 @@ var SeriesfeedTransporter;
                     });
                 });
                 Promise.all(promises)
-                    .then(() => setTimeout(() => this.aquireEpisodeIds(), SeriesfeedTransporter.Config.CooldownInMs));
+                    .then(() => setTimeout(this.aquireEpisodeIds, SeriesfeedTransporter.Config.CooldownInMs));
             }
             aquireEpisodeIds() {
                 const promises = new Array();
@@ -1805,7 +1835,7 @@ var SeriesfeedTransporter;
                     promises.push(promiseAll);
                 });
                 Promise.all(promises)
-                    .then(() => setTimeout(() => this.markEpisodes(), SeriesfeedTransporter.Config.CooldownInMs));
+                    .then(() => setTimeout(this.markEpisodes, SeriesfeedTransporter.Config.CooldownInMs));
             }
             markEpisodes() {
                 this._selectedShows.forEach((show, rowIndex) => {
@@ -1979,7 +2009,6 @@ var SeriesfeedTransporter;
                                     });
                                 });
                                 this._selectedShows.push(show);
-                                console.log("pushed show", show, "to", this._selectedShows);
                             }
                             else {
                                 const position = this._selectedShows.map((show) => show.name).indexOf(show.name);
@@ -2076,9 +2105,11 @@ var SeriesfeedTransporter;
                     this.loadUser();
                 };
                 const refreshButton = new SeriesfeedTransporter.ViewModels.Button(SeriesfeedTransporter.Enums.ButtonType.Link, "fa-refresh", null, refreshButtonAction);
-                refreshButton.instance.style.position = "absolute";
-                refreshButton.instance.style.left = "0";
-                refreshButton.instance.style.bottom = "0";
+                refreshButton.instance.css({
+                    position: 'absolute',
+                    left: '0',
+                    bottom: '0'
+                });
                 this._user.instance.append(refreshButton.instance);
                 this.loadUser();
             }
@@ -2108,8 +2139,8 @@ var SeriesfeedTransporter;
     (function (Controllers) {
         class NavigationController {
             initialise() {
-                SeriesfeedTransporter.Services.NavigationService.add(SeriesfeedTransporter.Enums.NavigationType.Series, 6, "Importeren", SeriesfeedTransporter.Enums.ShortUrl.Import);
-                SeriesfeedTransporter.Services.NavigationService.add(SeriesfeedTransporter.Enums.NavigationType.Series, 7, "Exporteren", SeriesfeedTransporter.Enums.ShortUrl.Export);
+                SeriesfeedTransporter.Services.NavigationService.add(SeriesfeedTransporter.Enums.NavigationType.Series, 5, "Importeren", SeriesfeedTransporter.Enums.ShortUrl.Import);
+                SeriesfeedTransporter.Services.NavigationService.add(SeriesfeedTransporter.Enums.NavigationType.Series, 6, "Exporteren", SeriesfeedTransporter.Enums.ShortUrl.Export);
             }
         }
         Controllers.NavigationController = NavigationController;
@@ -2121,10 +2152,8 @@ var SeriesfeedTransporter;
     (function (Services) {
         class NavigationService {
             static add(navigationType, position, text, url) {
-                var _a;
-                const mainMenuItem = document.querySelector("ul.main-menu .submenu .inner li.top-level:nth-child(" + navigationType + ")");
-                const menuItem = Services.ElementService.createElement("<li><a href='" + url + "'>" + text + "</a></li>");
-                (_a = mainMenuItem.querySelector(".main-menu-dropdown li:nth-child(" + position + ")")) === null || _a === void 0 ? void 0 : _a.before(menuItem);
+                const mainMenuItem = $("ul.main-menu .submenu .inner .top-level:eq(" + navigationType + ")");
+                mainMenuItem.find(".main-menu-dropdown li:eq(" + position + ")").before("<li><a href='" + url + "'>" + text + "</a></li>");
             }
         }
         Services.NavigationService = NavigationService;
@@ -2142,7 +2171,7 @@ var SeriesfeedTransporter;
             initialVisitRouting() {
                 if (window.location.href.startsWith(SeriesfeedTransporter.Config.BaseUrl + SeriesfeedTransporter.Enums.ShortUrl.Import)
                     || window.location.href.startsWith(SeriesfeedTransporter.Config.BaseUrl + SeriesfeedTransporter.Enums.ShortUrl.Export)) {
-                    const url = window.location.href.replace(SeriesfeedTransporter.Config.BaseUrl, "");
+                    const url = window.location.href.replace(SeriesfeedTransporter.Config.BaseUrl, '');
                     this.initialiseInitialVisit(url);
                     SeriesfeedTransporter.Services.RouterService.navigate(url);
                 }
@@ -2151,18 +2180,13 @@ var SeriesfeedTransporter;
                 window.history.replaceState({ "shortUrl": url }, "", url);
                 const mainContent = this.fixPageLayoutAndGetMainContent();
                 const card = SeriesfeedTransporter.Services.CardService.initialise();
-                mainContent.append(card.instance[0]);
+                mainContent.append(card.instance);
             }
             fixPageLayoutAndGetMainContent() {
-                const contentContainers = document.querySelectorAll(".contentWrapper .container");
-                const lastContainer = contentContainers[contentContainers.length - 1];
-                lastContainer.classList.remove("container");
-                lastContainer.classList.add("wrapper", "bg");
-                lastContainer.innerHTML = "";
-                const container = document.createElement("div");
-                container.id = SeriesfeedTransporter.Config.Id.MainContent;
-                container.classList.add("container");
-                lastContainer.append(container);
+                const wrapper = $('.contentWrapper .container').last().empty();
+                wrapper.removeClass('container').addClass('wrapper bg');
+                const container = $('<div></div>').addClass('container').attr('id', SeriesfeedTransporter.Config.Id.MainContent);
+                wrapper.append(container);
                 return container;
             }
             respondToBrowserNavigationChanges() {
@@ -2282,8 +2306,9 @@ var SeriesfeedTransporter;
                 }
                 if (url.startsWith(SeriesfeedTransporter.Enums.ShortUrl.ImportFavouritesImdb)) {
                     const parts = url.split('/');
+                    const userId = parts[parts.length - 2];
                     const username = parts[parts.length - 1];
-                    const user = new SeriesfeedTransporter.Models.ImdbUser(username, null);
+                    const user = new SeriesfeedTransporter.Models.ImdbUser(userId, decodeURIComponent(username));
                     this.importFavouritesImdbByUser(user);
                     return;
                 }
@@ -2307,34 +2332,30 @@ var SeriesfeedTransporter;
                 if (!window.location.href.includes("users") || !window.location.href.includes("edit")) {
                     return;
                 }
-                const settingBlocks = document.querySelector(".container.content .row");
+                const settingBlocks = $('.container.content .row');
                 const localStorageBlock = this.getLocalStorageBlock();
                 settingBlocks.append(localStorageBlock);
             }
             getLocalStorageBlock() {
-                const localStorageBlockHtml = `
-            <div class="col-xs-12 col-md-6">
-                <div id="userscriptTool" class="blog-left cardStyle cardForm">
-                    <div class="blog-content">
-                        <h3>Userscript Seriesfeed Transporter</h3>
-                        <p>Dit script slaat gegevens van series en afleveringen op om de druk op de gerelateerde servers te verlagen. Deze data wordt gebruikt om (bij terugkerende acties) bekende data niet opnieuw te hoeven ophalen. Je kunt de lokale gegevens wissen als je problemen ondervindt met importeren/exporteren.</p>
-                        <fieldset class="fieldset-save">
-                            <input type="button" class="btn btn-success delete btn-right" value="Lokale gegevens wissen" sft-handle="btn-delete" />
-                        </fieldset>
-                        <span sft-handle="msg-deleted" hidden="true" style="margin-bottom: 0px; padding-top: 5px;">De gegevens zijn gewist.</span>
-                    </div>
-                </div>
-            </div>
-            `;
-                const localStorageBlock = SeriesfeedTransporter.Services.ElementService.createElement(localStorageBlockHtml);
-                const deleteButton = localStorageBlock.querySelector("[sft-handle=btn-delete]");
-                const deletedMessage = localStorageBlock.querySelector("[sft-handle=msg-deleted]");
-                deleteButton.onclick = () => {
-                    deletedMessage.hidden = true;
+                const block = $('<div/>').addClass('col-xs-12 col-md-6');
+                const card = $('<div/>').attr('id', 'userscriptTool').addClass('blog-left cardStyle cardForm');
+                const cardContent = $('<div/>').addClass('blog-content');
+                const cardTitle = $('<h3/>').text("Userscript Seriesfeed Transporter");
+                const cardParagraph = $('<p/>').text("Dit script slaat gegevens van series en afleveringen op om de druk op de gerelateerde servers te verlagen. Deze data wordt gebruikt om (bij terugkerende acties) bekende data niet opnieuw te hoeven ophalen. Je kunt de lokale gegevens wissen als je problemen ondervindt met importeren/exporteren.");
+                const dataDeleted = $('<p/>').text("De gegevens zijn gewist.").css({ marginBottom: '0', paddingTop: '5px' }).hide();
+                const buttonAction = () => {
+                    dataDeleted.hide();
                     SeriesfeedTransporter.Services.StorageService.clearAll();
-                    setTimeout(() => deletedMessage.hidden = false, 100);
+                    setTimeout(() => dataDeleted.show(), 100);
                 };
-                return localStorageBlock;
+                const button = new SeriesfeedTransporter.ViewModels.Button('btn-success', 'fa-trash', "Lokale gegevens wissen", buttonAction);
+                block.append(card);
+                card.append(cardContent);
+                cardContent.append(cardTitle);
+                cardContent.append(cardParagraph);
+                cardContent.append(button.instance);
+                cardContent.append(dataDeleted);
+                return block;
             }
         }
         Controllers.SettingsController = SettingsController;
@@ -2382,11 +2403,10 @@ var SeriesfeedTransporter;
     (function (Enums) {
         let NavigationType;
         (function (NavigationType) {
-            NavigationType[NavigationType["Invalid"] = 0] = "Invalid";
-            NavigationType[NavigationType["Series"] = 1] = "Series";
-            NavigationType[NavigationType["Fora"] = 2] = "Fora";
-            NavigationType[NavigationType["Nieuws"] = 3] = "Nieuws";
-            NavigationType[NavigationType["Community"] = 4] = "Community";
+            NavigationType[NavigationType["Series"] = 0] = "Series";
+            NavigationType[NavigationType["Fora"] = 1] = "Fora";
+            NavigationType[NavigationType["Nieuws"] = 2] = "Nieuws";
+            NavigationType[NavigationType["Community"] = 3] = "Community";
         })(NavigationType = Enums.NavigationType || (Enums.NavigationType = {}));
     })(Enums = SeriesfeedTransporter.Enums || (SeriesfeedTransporter.Enums = {}));
 })(SeriesfeedTransporter || (SeriesfeedTransporter = {}));
@@ -2760,20 +2780,6 @@ var SeriesfeedTransporter;
 (function (SeriesfeedTransporter) {
     var Services;
     (function (Services) {
-        class ElementService {
-            static createElement(html) {
-                const wrapper = document.createElement("div");
-                wrapper.innerHTML = html;
-                return wrapper.firstElementChild;
-            }
-        }
-        Services.ElementService = ElementService;
-    })(Services = SeriesfeedTransporter.Services || (SeriesfeedTransporter.Services = {}));
-})(SeriesfeedTransporter || (SeriesfeedTransporter = {}));
-var SeriesfeedTransporter;
-(function (SeriesfeedTransporter) {
-    var Services;
-    (function (Services) {
         class ShowSorterService {
             static sort(shows, property) {
                 return shows.sort((showA, showB) => {
@@ -2819,31 +2825,61 @@ var SeriesfeedTransporter;
     var Services;
     (function (Services) {
         class TimeAgoTranslatorService {
-            static getDutchTranslationOfMonth(month) {
+            static getDutchTranslationOfTime(original) {
+                switch (original) {
+                    case "years":
+                    case "year":
+                        return "jaar";
+                    case "months":
+                        return "maanden";
+                    case "month":
+                        return "maand";
+                    case "weeks":
+                        return "weken";
+                    case "week":
+                        return "week";
+                    case "days":
+                        return "dagen";
+                    case "day":
+                        return "dag";
+                    case "hours":
+                    case "hour":
+                        return "uur";
+                    case "minutes":
+                        return "minuten";
+                    case "minute":
+                        return "minuut";
+                    case "seconds":
+                        return "seconden";
+                    case "second":
+                        return "seconde";
+                }
+            }
+            static getFullDutchTranslationOfMonthAbbreviation(month) {
                 switch (month) {
-                    case "January":
+                    case "Jan":
                         return "januari";
-                    case "February":
+                    case "Feb":
                         return "februari";
-                    case "March":
+                    case "Mar":
                         return "maart";
-                    case "April":
+                    case "Apr":
                         return "april";
                     case "May":
                         return "mei";
-                    case "June":
+                    case "Jun":
                         return "juni";
-                    case "July":
+                    case "Jul":
                         return "juli";
-                    case "August":
+                    case "Aug":
                         return "augustus";
-                    case "September":
+                    case "Sep":
                         return "september";
-                    case "October":
+                    case "Oct":
                         return "oktober";
-                    case "November":
+                    case "Nov":
                         return "november";
-                    case "December":
+                    case "Dec":
                         return "december";
                 }
             }
@@ -2857,11 +2893,9 @@ var SeriesfeedTransporter;
     (function (ViewModels) {
         class Button {
             constructor(buttonType, iconClass, text, action, width) {
-                this.instance = document.createElement("div");
-                this.instance.classList.add("btn");
-                this.icon = document.createElement("i");
-                this.icon.classList.add("fa");
-                this.text = document.createElement("span");
+                this.instance = $('<div/>').addClass('btn');
+                this.icon = $('<i/>').addClass('fa');
+                this.text = $('<span/>');
                 this.setButtonType(buttonType);
                 this.setClick(action);
                 this.setIcon(iconClass);
@@ -2872,36 +2906,38 @@ var SeriesfeedTransporter;
             }
             setButtonType(buttonType) {
                 if (this.currentButtonType != null || this.currentButtonType !== "") {
-                    this.instance.classList.remove(this.currentButtonType);
+                    this.instance.removeClass(this.currentButtonType);
                     this.currentButtonType = null;
                 }
-                this.instance.classList.add(buttonType);
+                this.instance.addClass(buttonType);
                 this.currentButtonType = buttonType;
             }
             setClick(action) {
-                this.instance.removeEventListener("click", action);
+                this.instance.unbind('click');
                 if (action == null) {
                     return;
                 }
-                this.instance.addEventListener("click", action);
+                this.instance.click(action);
             }
             setIcon(iconClass) {
                 if (this.currentIconClass != null || this.currentIconClass !== "") {
-                    this.icon.classList.remove(this.currentIconClass);
+                    this.icon.removeClass(this.currentIconClass);
                     this.currentIconClass = null;
                 }
-                this.icon.classList.add(iconClass);
+                this.icon.addClass(iconClass);
                 this.currentIconClass = iconClass;
             }
             setText(text) {
                 if (text == null) {
-                    this.text.innerText = "";
+                    this.text.text('');
                     return;
                 }
-                this.text.innerText = text;
+                this.text.text(text);
             }
             setWidth(width) {
-                this.instance.style.width = (width == null) ? "auto" : width;
+                this.instance.css({
+                    width: width == null ? 'auto' : width
+                });
             }
         }
         ViewModels.Button = Button;
@@ -3333,7 +3369,7 @@ var SeriesfeedTransporter;
                 -moz-osx-font-smoothing: grayscale;
             }
         </style>`;
-                document.body.append(Services.ElementService.createElement(css));
+                $('body').append(css);
             }
         }
         Services.StyleService = StyleService;
