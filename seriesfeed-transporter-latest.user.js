@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Seriesfeed Transporter
 // @namespace    https://www.seriesfeed.com
-// @version      1.0.2
+// @version      1.0.3
 // @description  Import and export your favourites and time wasted on Seriesfeed.com.
 // @match        https://*.seriesfeed.com/*
 // @grant        unsafeWindow
@@ -12,7 +12,7 @@
 // @domain       www.imdb.com
 // @require      https://code.jquery.com/jquery-3.2.1.min.js
 // @author       Tom
-// @copyright    2017 - 2020, Tom
+// @copyright    2017 - 2021, Tom
 // ==/UserScript==
 /* jshint -W097 */
 /* global $, GM_xmlhttpRequest, Promise, console */
@@ -1775,7 +1775,7 @@ var SeriesfeedTransporter;
                     promises.push(promise);
                 });
                 Promise.all(promises)
-                    .then(() => setTimeout(this.getShowSeasonEpisodesBySeasonSlug, SeriesfeedTransporter.Config.CooldownInMs));
+                    .then(() => setTimeout(() => this.getShowSeasonEpisodesBySeasonSlug(), SeriesfeedTransporter.Config.CooldownInMs));
             }
             getShowSeasonEpisodesBySeasonSlug() {
                 const promises = new Array();
@@ -1789,7 +1789,7 @@ var SeriesfeedTransporter;
                     });
                 });
                 Promise.all(promises)
-                    .then(() => setTimeout(this.aquireEpisodeIds, SeriesfeedTransporter.Config.CooldownInMs));
+                    .then(() => setTimeout(() => this.aquireEpisodeIds(), SeriesfeedTransporter.Config.CooldownInMs));
             }
             aquireEpisodeIds() {
                 const promises = new Array();
@@ -1835,7 +1835,7 @@ var SeriesfeedTransporter;
                     promises.push(promiseAll);
                 });
                 Promise.all(promises)
-                    .then(() => setTimeout(this.markEpisodes, SeriesfeedTransporter.Config.CooldownInMs));
+                    .then(() => setTimeout(() => this.markEpisodes(), SeriesfeedTransporter.Config.CooldownInMs));
             }
             markEpisodes() {
                 this._selectedShows.forEach((show, rowIndex) => {
