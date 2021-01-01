@@ -1,5 +1,8 @@
 Seriesfeed Transporter Changelog
 
+Version 1.0.3 (01 January 2021)
+Selected shows were not being transferred between states. This is fixed now.
+
 Version 1.0.2 (28 February 2020)
 Fixed TheTVDB base url that fixed importing from Bierdopje.com
 
